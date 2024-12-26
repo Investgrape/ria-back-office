@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import EmployeeSection from './components/EmployeeSection';
 import AuditSection from './components/AuditSection';
 import DocumentsSection from './components/DocumentsSection';
+import DashboardContent from './components/DashboardContent';
 
 // SVG Icons Components
 const SearchIcon = () => (
@@ -43,71 +43,6 @@ const FileIcon = () => (
     <path d="M16 17H8"/>
     <path d="M10 9H8"/>
   </svg>
-);
-
-const mockData = {
-  auditScores: [
-    { date: 'Nov 25', score: 92 },
-    { date: 'Dec 2', score: 93 },
-    { date: 'Dec 9', score: 91 },
-    { date: 'Dec 16', score: 94 },
-    { date: 'Dec 23', score: 94 }
-  ],
-  website: {
-    lastCheck: '2 minutes ago',
-    status: 'online',
-    uptime: '99.9%',
-    lastDowntime: 'None in last 30 days'
-  }
-};
-
-const DashboardContent = () => (
-  <div className="space-y-6">
-    <div className="flex justify-between items-start">
-      <div>
-        <h1 className="text-2xl font-normal">Good afternoon,</h1>
-        <h2 className="text-2xl text-gray-500">Compliance Manager</h2>
-      </div>
-      <div className="flex gap-8 text-right">
-        <div>
-          <div className="text-sm text-gray-500">Website Status</div>
-          <div className="text-2xl text-emerald-600">Online</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500">Last Check</div>
-          <div className="text-2xl">{mockData.website.lastCheck}</div>
-        </div>
-      </div>
-    </div>
-
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={mockData.auditScores}>
-            <XAxis 
-              dataKey="date" 
-              axisLine={false}
-              tickLine={false}
-            />
-            <YAxis 
-              domain={[85, 100]}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip />
-            <Line 
-              type="monotone" 
-              dataKey="score" 
-              stroke="#10B981" 
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  </div>
 );
 
 function App() {
