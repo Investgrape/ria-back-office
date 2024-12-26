@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import EmployeeSection from './components/EmployeeSection';
 
 // SVG Icons Components
 const SearchIcon = () => (
@@ -20,6 +21,12 @@ const ChartIcon = () => (
   </svg>
 );
 
+const UserIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
 const mockData = {
   auditScores: [
     { date: 'Nov 25', score: 92 },
@@ -36,8 +43,74 @@ const mockData = {
   }
 };
 
+const DashboardContent = () => (
+  <div className="space-y-6">
+    {/* Header */}
+    <div className="flex justify-between items-start">
+      <div>
+        <h1 className="text-2xl font-normal">Good afternoon,</h1>
+        <h2 className="text-2xl text-gray-500">Compliance Manager</h2>
+      </div>
+      <div className="flex gap-8 text-right">
+        <div>
+          <div className="text-sm text-gray-500">Website Status</div>
+          <div className="text-2xl text-emerald-600">Online</div>
+        </div>
+        <div>
+          <div className="text-sm text-gray-500">Last Check</div>
+          <div className="text-2xl">{mockData.website.lastCheck}</div>
+        </div>
+      </div>
+    </div>
+
+    {/* Chart Card */}
+    <div className="bg-white rounded-lg shadow p-6">
+      <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
+      <div className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={mockData.auditScores}>
+            <XAxis 
+              dataKey="date" 
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis 
+              domain={[85, 100]}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip />
+            <Line 
+              type="monotone" 
+              dataKey="score" 
+              stroke="#10B981" 
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  </div>
+);
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState('dashboard');
+
+  const sidebarItems = [
+    { icon: ChartIcon, label: 'Dashboard', id: 'dashboard' },
+    { icon: UserIcon, label: 'Employees', id: 'employees' }
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'employees':
+        return <EmployeeSection />;
+      default:
+        return <DashboardContent />;
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -48,12 +121,20 @@ function App() {
             <div className="w-8 h-8 rounded-full bg-emerald-500" />
           </div>
           <nav className="space-y-1">
-            <button
-              className="w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors bg-emerald-50 text-emerald-600"
-            >
-              <ChartIcon />
-              {isSidebarOpen && <span>Dashboard</span>}
-            </button>
+            {sidebarItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${
+                  activeSection === item.id
+                    ? 'bg-emerald-50 text-emerald-600'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <item.icon />
+                {isSidebarOpen && <span>{item.label}</span>}
+              </button>
+            ))}
           </nav>
         </div>
       </div>
@@ -90,56 +171,9 @@ function App() {
           </div>
         </div>
 
-        {/* Dashboard Content */}
+        {/* Main Content Area */}
         <main className="flex-1 overflow-auto p-6">
-          <div className="space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-2xl font-normal">Good afternoon,</h1>
-                <h2 className="text-2xl text-gray-500">Compliance Manager</h2>
-              </div>
-              <div className="flex gap-8 text-right">
-                <div>
-                  <div className="text-sm text-gray-500">Website Status</div>
-                  <div className="text-2xl text-emerald-600">Online</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500">Last Check</div>
-                  <div className="text-2xl">{mockData.website.lastCheck}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Chart Card */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockData.auditScores}>
-                    <XAxis 
-                      dataKey="date" 
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis 
-                      domain={[85, 100]}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="score" 
-                      stroke="#10B981" 
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
+          {renderContent()}
         </main>
       </div>
     </div>
