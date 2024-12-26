@@ -3,6 +3,7 @@ import EmployeeSection from './components/EmployeeSection';
 import AuditSection from './components/AuditSection';
 import DocumentsSection from './components/DocumentsSection';
 import DashboardContent from './components/DashboardContent';
+import MarketingSection from './components/MarketingSection';
 
 // SVG Icons Components
 const SearchIcon = () => (
@@ -45,6 +46,14 @@ const FileIcon = () => (
   </svg>
 );
 
+const MarketingIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    <path d="M3.29 7L12 12l8.71-5"/>
+    <path d="M12 22V12"/>
+  </svg>
+);
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -53,7 +62,8 @@ function App() {
     { icon: ChartIcon, label: 'Dashboard', id: 'dashboard' },
     { icon: UserIcon, label: 'Employees', id: 'employees' },
     { icon: ShieldIcon, label: 'Audit', id: 'audit' },
-    { icon: FileIcon, label: 'Documents', id: 'documents' }
+    { icon: FileIcon, label: 'Documents', id: 'documents' },
+    { icon: MarketingIcon, label: 'Marketing', id: 'marketing' }
   ];
 
   const renderContent = () => {
@@ -64,6 +74,8 @@ function App() {
         return <AuditSection />;
       case 'documents':
         return <DocumentsSection />;
+      case 'marketing':
+        return <MarketingSection />;
       default:
         return <DashboardContent />;
     }
