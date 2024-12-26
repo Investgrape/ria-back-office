@@ -1,17 +1,23 @@
 import { useState } from 'react';
-import { 
-  Search, Menu, User,
-  BarChart, Shield, FileText,
-  MessageSquare, Settings, Globe,
-} from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-const Card = ({ children, className = '' }) => (
-  <div className={`bg-white rounded-lg shadow ${className}`}>{children}</div>
+// SVG Icons Components
+const SearchIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+  </svg>
 );
 
-const CardContent = ({ children, className = '' }) => (
-  <div className={className}>{children}</div>
+const MenuIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+  </svg>
+);
+
+const ChartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+  </svg>
 );
 
 const mockData = {
@@ -26,64 +32,48 @@ const mockData = {
     lastCheck: '2 minutes ago',
     status: 'online',
     uptime: '99.9%',
-    lastDowntime: 'None in last 30 days',
-    requiredDisclosures: {
-      total: 12,
-      present: 11,
-      missing: ['State-specific fee schedule']
-    }
+    lastDowntime: 'None in last 30 days'
   }
 };
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState('dashboard');
-
-  const sidebarItems = [
-    { icon: BarChart, label: 'Dashboard', id: 'dashboard' },
-    { icon: User, label: 'Employees', id: 'employees' },
-    { icon: Shield, label: 'Audit', id: 'audit' },
-    { icon: FileText, label: 'Documents', id: 'documents' },
-    { icon: MessageSquare, label: 'Marketing', id: 'marketing' },
-    { icon: Settings, label: 'Settings', id: 'settings' }
-  ];
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
       <div className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-white border-r border-gray-200 transition-all duration-300`}>
         <div className="p-4">
           <div className="flex items-center mb-8">
             <div className="w-8 h-8 rounded-full bg-emerald-500" />
           </div>
           <nav className="space-y-1">
-            {sidebarItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${
-                  activeSection === item.id
-                    ? 'bg-emerald-50 text-emerald-600'
-                    : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <item.icon className="w-5 h-5" />
-                {isSidebarOpen && <span>{item.label}</span>}
-              </button>
-            ))}
+            <button
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors bg-emerald-50 text-emerald-600"
+            >
+              <ChartIcon />
+              {isSidebarOpen && <span>Dashboard</span>}
+            </button>
           </nav>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Navigation */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
           <div className="flex items-center justify-between px-4 h-16">
             <div className="flex items-center gap-4">
-              <Menu 
-                className="w-6 h-6 text-gray-500 cursor-pointer hover:text-gray-700" 
+              <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              />
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <MenuIcon />
+              </button>
               <div className="relative">
-                <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <SearchIcon />
+                </div>
                 <input 
                   type="text"
                   placeholder="Search..."
@@ -100,8 +90,10 @@ function App() {
           </div>
         </div>
 
+        {/* Dashboard Content */}
         <main className="flex-1 overflow-auto p-6">
           <div className="space-y-6">
+            {/* Header */}
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-2xl font-normal">Good afternoon,</h1>
@@ -119,68 +111,34 @@ function App() {
               </div>
             </div>
 
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={mockData.auditScores}>
-                      <XAxis 
-                        dataKey="date" 
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis 
-                        domain={[85, 100]}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip />
-                      <Line 
-                        type="monotone" 
-                        dataKey="score" 
-                        stroke="#10B981" 
-                        strokeWidth={2}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 className="text-lg font-medium flex items-center gap-2">
-                      <Globe className="w-5 h-5" />
-                      Website Compliance Monitor
-                    </h2>
-                    <p className="text-sm text-gray-500">Last checked {mockData.website.lastCheck}</p>
-                  </div>
-                  <span className="px-3 py-1 text-sm rounded-full bg-emerald-100 text-emerald-800">
-                    ONLINE
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-6">
-                  <div>
-                    <div className="text-sm text-gray-500">Uptime (30 days)</div>
-                    <div className="text-xl">{mockData.website.uptime}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Required Disclosures</div>
-                    <div className="text-xl">
-                      {mockData.website.requiredDisclosures.present}/{mockData.website.requiredDisclosures.total}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Last Downtime</div>
-                    <div className="text-xl">{mockData.website.lastDowntime}</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Chart Card */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={mockData.auditScores}>
+                    <XAxis 
+                      dataKey="date" 
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis 
+                      domain={[85, 100]}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip />
+                    <Line 
+                      type="monotone" 
+                      dataKey="score" 
+                      stroke="#10B981" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </main>
       </div>
