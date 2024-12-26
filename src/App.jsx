@@ -4,6 +4,7 @@ import AuditSection from './components/AuditSection';
 import DocumentsSection from './components/DocumentsSection';
 import DashboardContent from './components/DashboardContent';
 import MarketingSection from './components/MarketingSection';
+import EmailSection from './components/EmailSection';
 
 // SVG Icons Components
 const SearchIcon = () => (
@@ -54,6 +55,13 @@ const MarketingIcon = () => (
   </svg>
 );
 
+const EmailIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+);
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -63,7 +71,8 @@ function App() {
     { icon: UserIcon, label: 'Employees', id: 'employees' },
     { icon: ShieldIcon, label: 'Audit', id: 'audit' },
     { icon: FileIcon, label: 'Documents', id: 'documents' },
-    { icon: MarketingIcon, label: 'Marketing', id: 'marketing' }
+    { icon: MarketingIcon, label: 'Marketing', id: 'marketing' },
+    { icon: EmailIcon, label: 'Email', id: 'email' }
   ];
 
   const renderContent = () => {
@@ -76,6 +85,8 @@ function App() {
         return <DocumentsSection />;
       case 'marketing':
         return <MarketingSection />;
+      case 'email':
+        return <EmailSection />;
       default:
         return <DashboardContent />;
     }
