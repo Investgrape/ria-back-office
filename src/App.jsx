@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import EmployeeSection from './components/EmployeeSection';
+import AuditSection from './components/AuditSection';
 
 // SVG Icons Components
 const SearchIcon = () => (
@@ -27,6 +28,12 @@ const UserIcon = () => (
   </svg>
 );
 
+const ShieldIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>
+);
+
 const mockData = {
   auditScores: [
     { date: 'Nov 25', score: 92 },
@@ -45,7 +52,6 @@ const mockData = {
 
 const DashboardContent = () => (
   <div className="space-y-6">
-    {/* Header */}
     <div className="flex justify-between items-start">
       <div>
         <h1 className="text-2xl font-normal">Good afternoon,</h1>
@@ -63,7 +69,6 @@ const DashboardContent = () => (
       </div>
     </div>
 
-    {/* Chart Card */}
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-lg font-medium mb-4">Audit Score Trend</h2>
       <div className="h-64">
@@ -100,13 +105,16 @@ function App() {
 
   const sidebarItems = [
     { icon: ChartIcon, label: 'Dashboard', id: 'dashboard' },
-    { icon: UserIcon, label: 'Employees', id: 'employees' }
+    { icon: UserIcon, label: 'Employees', id: 'employees' },
+    { icon: ShieldIcon, label: 'Audit', id: 'audit' }
   ];
 
   const renderContent = () => {
     switch (activeSection) {
       case 'employees':
         return <EmployeeSection />;
+      case 'audit':
+        return <AuditSection />;
       default:
         return <DashboardContent />;
     }
@@ -114,7 +122,6 @@ function App() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
       <div className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-white border-r border-gray-200 transition-all duration-300`}>
         <div className="p-4">
           <div className="flex items-center mb-8">
@@ -139,9 +146,7 @@ function App() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Navigation */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
           <div className="flex items-center justify-between px-4 h-16">
             <div className="flex items-center gap-4">
@@ -171,8 +176,7 @@ function App() {
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto">
           {renderContent()}
         </main>
       </div>
