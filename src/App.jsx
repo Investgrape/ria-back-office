@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import DashboardContent from './components/DashboardContent';
 import DocumentsSection from './components/DocumentsSection';
@@ -14,13 +14,14 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<DashboardContent />} />
+          <Route path="/dashboard" element={<DashboardContent />} />
           <Route path="/documents" element={<DocumentsSection />} />
           <Route path="/email" element={<EmailSection />} />
           <Route path="/employees" element={<EmployeeSection />} />
           <Route path="/marketing" element={<MarketingSection />} />
           <Route path="/audit" element={<AuditSection />} />
           <Route path="/agreements" element={<ClientAgreements />} />
+          <Route path="/" element={<Navigate replace to="/dashboard" />} />
         </Routes>
       </Layout>
     </Router>
