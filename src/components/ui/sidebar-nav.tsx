@@ -1,37 +1,42 @@
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 const items = [
   {
     title: 'Dashboard',
-    href: '/',
-    icon: 'LayoutDashboard'
+    href: '/dashboard',
+    icon: 'dashboard'
   },
   {
     title: 'Employees',
     href: '/employees',
-    icon: 'Users'
+    icon: 'people'
   },
   {
     title: 'Agreements',
     href: '/agreements',
-    icon: 'FileText'
+    icon: 'description'
   }
 ];
 
 export function SidebarNav() {
-  const pathname = usePathname();
+  const location = useLocation();
 
   return (
     <nav className="grid items-start gap-2">
       {items.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = location.pathname === item.href;
         return (
           <Link
             key={item.href}
-            href={item.href}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground ${isActive ? 'bg-accent' : 'transparent'}`}
+            to={item.href}
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-100',
+              isActive ? 'bg-gray-100' : 'transparent'
+            )}
           >
+            <span className="material-icons-outlined">{item.icon}</span>
             <span>{item.title}</span>
           </Link>
         );
