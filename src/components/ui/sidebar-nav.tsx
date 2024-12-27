@@ -2,25 +2,17 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-const items = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: 'dashboard'
-  },
-  {
-    title: 'Employees',
-    href: '/employees',
-    icon: 'people'
-  },
-  {
-    title: 'Agreements',
-    href: '/agreements',
-    icon: 'description'
-  }
-];
+interface SidebarNavItem {
+  title: string;
+  href: string;
+  icon: string;
+}
 
-export function SidebarNav() {
+interface SidebarNavProps {
+  items: SidebarNavItem[];
+}
+
+export function SidebarNav({ items }: SidebarNavProps) {
   const location = useLocation();
 
   return (
