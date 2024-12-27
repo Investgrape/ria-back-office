@@ -30,19 +30,6 @@ jobs:
           pwd
           ls -la
       
-      - name: Check for dependencies lock file
-        run: |
-          if [ -f "package-lock.json" ]; then
-            echo "Found package-lock.json"
-          elif [ -f "npm-shrinkwrap.json" ]; then
-            echo "Found npm-shrinkwrap.json"
-          elif [ -f "yarn.lock" ]; then
-            echo "Found yarn.lock"
-          else
-            echo "Dependencies lock file not found"
-            exit 1
-          fi
-      
       - name: Install dependencies
         run: |
           npm ci
