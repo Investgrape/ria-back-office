@@ -13,12 +13,12 @@ const Sidebar = () => {
   const location = useLocation();
   
   const navigationItems = [
-    { name: 'Documents', path: '/documents', icon: FileText },
-    { name: 'Email', path: '/email', icon: Mail },
-    { name: 'Employees', path: '/employees', icon: Users },
-    { name: 'Marketing', path: '/marketing', icon: Briefcase },
-    { name: 'Audit', path: '/audit', icon: ClipboardList },
-    { name: 'Client Agreements', path: '/agreements', icon: FileContract }
+    { name: 'Documents', path: '#/documents', icon: FileText },
+    { name: 'Email', path: '#/email', icon: Mail },
+    { name: 'Employees', path: '#/employees', icon: Users },
+    { name: 'Marketing', path: '#/marketing', icon: Briefcase },
+    { name: 'Audit', path: '#/audit', icon: ClipboardList },
+    { name: 'Client Agreements', path: '#/agreements', icon: FileContract }
   ];
 
   return (
@@ -30,12 +30,12 @@ const Sidebar = () => {
         <ul className="space-y-2">
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path.replace('#', '');
             
             return (
               <li key={item.name}>
                 <Link
-                  to={item.path}
+                  to={item.path.replace('#', '')}
                   className={`flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-700 transition-colors ${
                     isActive ? 'bg-gray-700' : ''
                   }`}
