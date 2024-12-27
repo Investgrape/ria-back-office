@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import NewAgreementForm from './NewAgreementForm';
 
 const ClientAgreements = () => {
   const [showNewAgreement, setShowNewAgreement] = useState(false);
@@ -29,18 +27,8 @@ const ClientAgreements = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleNewAgreement = (formData) => {
-    const newAgreement = {
-      id: agreements.length + 1,
-      agreementType: 'Wrap Fee Agreement',
-      status: 'Pending Signature',
-      lastUpdated: new Date().toISOString().split('T')[0],
-      version: '1.0',
-      ...formData
-    };
-
-    setAgreements([...agreements, newAgreement]);
-    setShowNewAgreement(false);
+  const handleNewAgreement = () => {
+    setShowNewAgreement(true);
   };
 
   const filteredAgreements = agreements.filter(agreement =>
@@ -56,13 +44,13 @@ const ClientAgreements = () => {
             <h2 className="text-2xl font-bold text-gray-900">Client Agreements</h2>
             <p className="mt-1 text-sm text-gray-500">Manage and create client investment advisory agreements</p>
           </div>
-          <Button 
-            onClick={() => setShowNewAgreement(true)}
-            className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700"
+          <button 
+            onClick={handleNewAgreement}
+            className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
           >
             <span className="material-icons-outlined text-sm mr-2">add</span>
             New Agreement
-          </Button>
+          </button>
         </div>
         
         <div className="p-6">
@@ -133,12 +121,6 @@ const ClientAgreements = () => {
           </div>
         </div>
       </div>
-
-      <NewAgreementForm 
-        isOpen={showNewAgreement}
-        onClose={() => setShowNewAgreement(false)}
-        onSubmit={handleNewAgreement}
-      />
     </div>
   );
 };
