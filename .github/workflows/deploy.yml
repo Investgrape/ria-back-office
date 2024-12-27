@@ -14,38 +14,52 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install
+          npm list
       
-      - name: Build
+      - name: Type check
+        run: npm run typecheck
+      
+      - name: Build project
         run: |
           npm run build
-          echo "Build completed successfully"
-          ls -R dist
+          echo "Build directory contents:"
+          ls -la dist
+          echo "Build logs:"
+          cat dist/index.html
       
-      - name: Setup Pages
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: dist
+          retention-days: 5
+      
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
       
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./dist
+          path: dist
   
   deploy:
     needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
