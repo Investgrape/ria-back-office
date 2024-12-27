@@ -5,90 +5,28 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@v3
+
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
           cache: 'npm'
-      
-      - name: Display environment info
-        run: |
-          node --version
-          npm --version
-          pwd
-          ls -la
-      
+
       - name: Install dependencies
-        run: |
-          npm ci
-          npm list || true
-      
-      - name: Check TypeScript configuration
-        run: |
-          cat tsconfig.json
-          npx tsc --showConfig
-      
-      - name: Type check
-        run: npm run typecheck || true
-      
-      - name: Build project
-        run: |
-          npm run build
-          echo "Build directory contents:"
-          ls -la dist
-          echo "Checking dist contents:"
-          find dist -type f
-      
-      - name: Verify build output
-        run: |
-          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
-            echo "Build failed: dist directory is empty"
-            exit 1
-          fi
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-output
-          path: dist
-          retention-days: 5
-      
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: dist
-          retention-days: 5
-  
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-output
-          path: dist
-      
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          artifact_name: build-output
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
