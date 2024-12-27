@@ -1,21 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
-interface NavigationItem {
-  path: string;
-  label: string;
-  icon: string;
-}
-
-const navigationItems: NavigationItem[] = [
-  { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { path: '/documents', label: 'Documents', icon: 'description' },
-  { path: '/email', label: 'Email', icon: 'email' },
-  { path: '/employees', label: 'Employees', icon: 'people' },
-  { path: '/marketing', label: 'Marketing', icon: 'campaign' },
-  { path: '/audit', label: 'Audit', icon: 'fact_check' },
-  { path: '/agreements', label: 'Client Agreements', icon: 'handshake' }
-];
+import { Sidebar } from './ui/sidebar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -25,9 +10,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  // Get current page title
-  const currentPage = navigationItems.find(item => item.path === location.pathname)?.label || 'Dashboard';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -103,7 +85,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="text-sm text-gray-600">
             <Link to="/dashboard" className="hover:text-emerald-600">Home</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900">{currentPage}</span>
+            <span className="text-gray-900">
+              {location.pathname.substring(1).charAt(0).toUpperCase() + location.pathname.slice(2)}
+            </span>
           </div>
         </div>
       </header>
@@ -113,22 +97,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <aside className={`fixed left-0 z-10 h-full bg-white shadow-sm transition-all duration-300 ${
           isSidebarOpen ? 'w-64' : 'w-0 -translate-x-full'
         }`}>
-          <nav className="p-4 space-y-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                  location.pathname === item.path
-                    ? 'bg-emerald-50 text-emerald-600'
-                    : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <span className="material-icons-outlined">{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </nav>
+          <Sidebar />
         </aside>
 
         {/* Main Content */}
