@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AIPreviewer from './AIPreviewer';
 
 const firmData = {
   name: 'Investment Advisers LLC',
@@ -13,38 +14,85 @@ const firmData = {
     'Financial Planning',
     'Retirement Planning',
     'Tax Planning'
-  ]
+  ],
+  custodians: ['Charles Schwab', 'Fidelity'],
+  riskProfile: {
+    investmentMinimum: '$500,000',
+    clientTypes: ['High Net Worth', 'Institutions'],
+    investmentStrategy: 'Long-term growth focused'
+  },
+  compliance: {
+    cco: 'Michael Chen',
+    lastExam: '2023-06',
+    registeredSince: '2010'
+  }
 };
 
 const AIGenerateModal = ({ document, onClose, onGenerate }) => {
   const [generating, setGenerating] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState(null);
   const [customizations, setCustomizations] = useState({
     tone: 'professional',
     length: 'comprehensive',
     include_appendices: true,
-    specific_regulations: true
+    specific_regulations: true,
+    include_disclosures: true
   });
 
   const handleGenerate = async () => {
     setGenerating(true);
-    // In a real implementation, this would make an API call to ChatGPT
-    // with the document type, firm data, and customizations
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-    setGenerating(false);
-    onGenerate({
-      content: `Sample generated content for ${document.title}...`,
+    
+    // Simulate API call to ChatGPT
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const generated = {
+      content: `[Generated ${document.title} with ${customizations.tone} tone...]
+
+This ${document.title.toLowerCase()} is generated for ${firmData.name}, an SEC registered investment adviser managing ${firmData.aum} for ${firmData.clientCount} clients.
+
+The firm provides ${firmData.services.join(', ')} and is registered in ${firmData.registrations.join(', ')}.
+
+This document was generated using ${customizations.length} format with ${customizations.include_appendices ? 'included' : 'excluded'} appendices.
+
+[Additional sections based on selected options would appear here...]
+`,
       metadata: {
         generated_at: new Date().toISOString(),
         model: 'gpt-4',
         customizations
       }
-    });
+    };
+
+    setGeneratedContent(generated);
+    setGenerating(false);
+    setShowPreview(true);
+  };
+
+  const handleApplyChanges = () => {
+    onGenerate(generatedContent);
     onClose();
   };
+
+  if (showPreview && generatedContent) {
+    return (
+      <AIPreviewer
+        generatedContent={generatedContent}
+        originalDocument={document}
+        onApply={handleApplyChanges}
+        onEdit={() => {
+          onGenerate(generatedContent);
+          onClose();
+        }}
+        onClose={() => setShowPreview(false)}
+      />
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg w-full max-w-2xl">
+        {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-start">
             <div>
@@ -64,28 +112,93 @@ const AIGenerateModal = ({ document, onClose, onGenerate }) => {
           </div>
         </div>
 
+        {/* Content */}
         <div className="p-6 space-y-6">
           {/* Firm Data Preview */}
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">Firm Data to Include</h3>
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-              {Object.entries(firmData).map(([key, value]) => (
-                <div key={key} className="flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">
-                      {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+              {/* Basic Information */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-medium text-gray-500 uppercase">Basic Information</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  {['name', 'website', 'aum', 'clientCount', 'employeeCount'].map(key => (
+                    <div key={key} className="flex items-start gap-2">
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                      />
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {key.split(/(?=[A-Z])/).join(' ').replace(/^[a-z]/, c => c.toUpperCase())}
+                        </div>
+                        <div className="text-sm text-gray-500">{firmData[key]}</div>
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {Array.isArray(value) ? value.join(', ') : value}
+                  ))}
+                </div>
+              </div>
+
+              {/* Locations & Registrations */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-medium text-gray-500 uppercase">Locations & Registrations</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Locations</div>
+                      <div className="text-sm text-gray-500">{firmData.locations.join(', ')}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Registrations</div>
+                      <div className="text-sm text-gray-500">{firmData.registrations.join(', ')}</div>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Services & Risk Profile */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-medium text-gray-500 uppercase">Services & Risk Profile</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Services</div>
+                      <div className="text-sm text-gray-500">{firmData.services.join(', ')}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="mt-1 h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Risk Profile</div>
+                      <div className="text-sm text-gray-500">
+                        {firmData.riskProfile.investmentStrategy}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -119,31 +232,45 @@ const AIGenerateModal = ({ document, onClose, onGenerate }) => {
                 </select>
               </div>
 
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    id="appendices"
                     checked={customizations.include_appendices}
                     onChange={(e) => setCustomizations(prev => ({ ...prev, include_appendices: e.target.checked }))}
                     className="h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
                   />
-                  <span className="text-sm text-gray-700">Include Appendices</span>
-                </label>
+                  <label htmlFor="appendices" className="text-sm text-gray-700">Include Appendices</label>
+                </div>
 
-                <label className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    id="regulations"
                     checked={customizations.specific_regulations}
                     onChange={(e) => setCustomizations(prev => ({ ...prev, specific_regulations: e.target.checked }))}
                     className="h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
                   />
-                  <span className="text-sm text-gray-700">Include State-Specific Regulations</span>
-                </label>
+                  <label htmlFor="regulations" className="text-sm text-gray-700">Include State-Specific Regulations</label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="disclosures"
+                    checked={customizations.include_disclosures}
+                    onChange={(e) => setCustomizations(prev => ({ ...prev, include_disclosures: e.target.checked }))}
+                    className="h-4 w-4 text-emerald-600 rounded border-gray-300 focus:ring-emerald-500"
+                  />
+                  <label htmlFor="disclosures" className="text-sm text-gray-700">Include Required Disclosures</label>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Footer */}
         <div className="p-6 border-t border-gray-200 flex justify-end gap-4">
           <button
             onClick={onClose}
