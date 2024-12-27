@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, Search, Menu, X, ChevronDown, User } from 'lucide-react';
 
 interface NavigationItem {
   path: string;
@@ -40,7 +39,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
             >
-              {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+              <span className="material-icons-outlined">
+                {isSidebarOpen ? 'menu_open' : 'menu'}
+              </span>
             </button>
             <span className="ml-4 text-lg font-semibold">RIA Back Office</span>
           </div>
@@ -48,7 +49,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Search Bar */}
           <div className="flex-1 max-w-2xl mx-4">
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <span className="material-icons-outlined absolute left-3 top-2.5 text-gray-400">
+                search
+              </span>
               <input
                 type="text"
                 placeholder="Search..."
@@ -60,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Right Side Icons */}
           <div className="flex items-center space-x-4">
             <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 relative">
-              <Bell size={20} />
+              <span className="material-icons-outlined">notifications</span>
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
             
@@ -70,16 +73,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100"
               >
                 <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <User size={20} className="text-emerald-600" />
+                  <span className="material-icons-outlined text-emerald-600">person</span>
                 </div>
-                <ChevronDown size={16} className="text-gray-600" />
+                <span className="material-icons-outlined text-gray-600">expand_more</span>
               </button>
 
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1">
-                  <a href="#profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                  <a href="#settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                  <a href="#logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                  <a href="#profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <span className="material-icons-outlined mr-2 align-middle">account_circle</span>
+                    Your Profile
+                  </a>
+                  <a href="#settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <span className="material-icons-outlined mr-2 align-middle">settings</span>
+                    Settings
+                  </a>
+                  <a href="#logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <span className="material-icons-outlined mr-2 align-middle">logout</span>
+                    Sign out
+                  </a>
                 </div>
               )}
             </div>
