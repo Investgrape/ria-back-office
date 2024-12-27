@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [react()],
   base: '/ria-back-office/',
   resolve: {
-    alias: [
-      { find: '@', replacement: path.resolve(__dirname, 'src') },
-    ],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   build: {
     outDir: 'dist',
@@ -17,10 +17,16 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         }
       }
     }
+  },
+  server: {
+    port: 3000,
+    open: true,
   }
 })
