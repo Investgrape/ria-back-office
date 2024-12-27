@@ -12,20 +12,6 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            return 'vendor'
-          }
-        }
-      }
-    }
-  },
-  server: {
-    port: 3000,
-    open: true,
+    emptyOutDir: true
   }
 })
