@@ -19,20 +19,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
+
+      - name: List directory contents
+        run: ls -la
+
       - name: Install dependencies
-        run: npm install --force
+        run: |
+          npm install --force
+          npm list --depth=0
+
+      - name: TypeCheck
+        run: npm run typecheck
+
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          ls -la dist
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
