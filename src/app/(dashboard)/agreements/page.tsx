@@ -1,7 +1,6 @@
-import ClientAgreements from '@/components/ClientAgreements/ClientAgreements';
+import React from 'react';
+import ClientAgreements from '@/components/agreements/client-agreements';
 
 export default function AgreementsPage() {
-  return (
-    <ClientAgreements />
-  );
+  return <ClientAgreements />;
 }
