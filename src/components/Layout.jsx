@@ -90,11 +90,43 @@ export default function Layout({ children }) {
         </nav>
       </aside>
 
-      <main className="flex-1">
-        <div className="py-6">
+      <div className="flex-1">
+        {/* Top Navigation Bar */}
+        <header className="bg-white shadow-sm">
+          <div className="flex items-center justify-between h-16 px-8">
+            <div className="flex items-center">
+              <nav className="ml-6 flex space-x-4">
+                <a href="#" className="px-3 py-2 text-sm font-medium text-gray-900">Compliance</a>
+                <a href="#" className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900">Operations</a>
+                <a href="#" className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900">Reports</a>
+                <a href="#" className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-900">Settings</a>
+              </nav>
+            </div>
+            <div className="flex items-center">
+              <button className="flex items-center text-gray-500 hover:text-gray-900">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </button>
+              <div className="ml-4 relative flex-shrink-0">
+                <div>
+                  <button className="flex items-center text-sm">
+                    <img className="h-8 w-8 rounded-full" src="/api/placeholder/32/32" alt="User" />
+                    <span className="ml-3 font-medium text-gray-700">John Doe</span>
+                    <svg className="ml-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="p-8">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
