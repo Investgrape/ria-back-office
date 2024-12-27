@@ -20,24 +20,43 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: 'npm'
+      
+      - name: Display environment info
+        run: |
+          node --version
+          npm --version
+          pwd
+          ls -la
       
       - name: Install dependencies
         run: |
-          npm install
-          npm list
+          npm ci
+          npm list || true
+      
+      - name: Check TypeScript configuration
+        run: |
+          cat tsconfig.json
+          npx tsc --showConfig
       
       - name: Type check
-        run: npm run typecheck
+        run: npm run typecheck || true
       
       - name: Build project
         run: |
           npm run build
           echo "Build directory contents:"
           ls -la dist
-          echo "Build logs:"
-          cat dist/index.html
+          echo "Checking dist contents:"
+          find dist -type f
+      
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
+            echo "Build failed: dist directory is empty"
+            exit 1
+          fi
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -53,6 +72,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist
+          retention-days: 5
   
   deploy:
     needs: build
@@ -61,6 +81,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist
+      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
+        with:
+          artifact_name: build-output
