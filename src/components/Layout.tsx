@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from './ui/sidebar';
+import { PlayCircle } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAuditing, setIsAuditing] = useState(false);
+
+  const handleRunAudit = () => {
+    setIsAuditing(true);
+    // Add audit logic here
+    setTimeout(() => setIsAuditing(false), 2000); // Simulated audit process
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -44,6 +52,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Right Side Icons */}
           <div className="flex items-center space-x-4">
+            <button 
+              onClick={handleRunAudit}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                isAuditing 
+                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+              }`}
+            >
+              <PlayCircle size={20} />
+              {isAuditing ? 'Running Audit...' : 'Run Audit'}
+            </button>
+
             <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 relative">
               <span className="material-icons-outlined">notifications</span>
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
