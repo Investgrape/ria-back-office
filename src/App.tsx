@@ -1,27 +1,30 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import React from 'react';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
 import Dashboard from './components/Dashboard/Dashboard';
 import AgreementManagement from './components/Agreements/AgreementManagement';
-import Layout from './components/Layout/Layout';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <Layout />,
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         element: <Dashboard />
       },
       {
-        path: '/agreements',
+        path: 'agreements',
         element: <AgreementManagement />
+      },
+      // Redirect root to dashboard
+      {
+        path: '',
+        element: <Dashboard />
       }
-      // Other routes...
     ]
   }
-], {
-  basename: '/ria-back-office'
-});
+]);
 
 const App: React.FC = () => {
   return <RouterProvider router={router} />;
