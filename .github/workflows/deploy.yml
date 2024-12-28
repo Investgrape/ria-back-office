@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy and Monitor
 
 on:
   push:
@@ -38,14 +38,14 @@ jobs:
       - name: Test Build Output
         run: |
           if [ ! -d "docs" ]; then
-            echo "::error::Build directory 'docs' not found"
+            echo "❌ Build directory 'docs' not found"
             exit 1
           fi
           if [ ! -f "docs/index.html" ]; then
-            echo "::error::index.html not found in build output"
+            echo "❌ index.html not found in build output"
             exit 1
           fi
-          echo "::notice::Build output verified successfully"
+          echo "✅ Build output verified successfully"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -58,23 +58,42 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deployment Status Check
+      - name: Verify Deployment
         run: |
-          echo "Deployment URL: ${{ steps.deployment.outputs.page_url }}"
-          echo "::notice::Deployment completed successfully"
-          curl -s -o /dev/null -w "%{http_code}" ${{ steps.deployment.outputs.page_url }} | grep 200 || {
-            echo "::error::Site is not responding with 200 OK"
+          echo "🔍 Checking deployment..."
+          echo "📍 Deployment URL: https://investgrape.github.io/ria-back-office/"
+          
+          # Wait for deployment to propagate
+          sleep 30
+          
+          # Check if site is accessible
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://investgrape.github.io/ria-back-office/)
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Site is live and responding"
+          else
+            echo "❌ Site is not accessible (Status: $HTTP_STATUS)"
             exit 1
-          }
+          fi
+          
+          # Check for critical resources
+          if curl -s https://investgrape.github.io/ria-back-office/ | grep -q "<div id=\"root\""; then
+            echo "✅ React root element found"
+          else
+            echo "❌ React root element not found"
+            exit 1
+          fi
 
-      - name: Create Deployment Status
+      - name: Deployment Report
         if: always()
         run: |
+          echo "📊 Deployment Status Report"
+          echo "---------------------------"
+          echo "🌐 URL: https://investgrape.github.io/ria-back-office/"
+          echo "⏱️ Time: $(date)"
+          echo "📦 Version: ${{ github.sha }}"
           if [ "${{ job.status }}" = "success" ]; then
-            echo "✅ Deployment successful - ${{ steps.deployment.outputs.page_url }}"
+            echo "✅ Deployment Status: SUCCESS"
           else
-            echo "❌ Deployment failed"
+            echo "❌ Deployment Status: FAILED"
           fi
