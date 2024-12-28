@@ -14,9 +14,6 @@ jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,73 +24,25 @@ jobs:
           node-version: '18'
           cache: npm
 
-      - name: Install Dependencies
+      - name: Clean Install Dependencies
         run: npm ci
+
+      - name: Clean Build Directory
+        run: rm -rf docs
 
       - name: Build
         run: npm run build
-        env:
-          NODE_ENV: production
 
-      - name: Test Build Output
-        run: |
-          if [ ! -d "docs" ]; then
-            echo "❌ Build directory 'docs' not found"
-            exit 1
-          fi
-          if [ ! -f "docs/index.html" ]; then
-            echo "❌ index.html not found in build output"
-            exit 1
-          fi
-          echo "✅ Build output verified successfully"
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: './docs'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          force_orphan: true
 
       - name: Verify Deployment
         run: |
           echo "🔍 Checking deployment..."
-          echo "📍 Deployment URL: https://investgrape.github.io/ria-back-office/"
-          
-          # Wait for deployment to propagate
+          echo "📍 URL: https://investgrape.github.io/ria-back-office/"
           sleep 30
-          
-          # Check if site is accessible
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://investgrape.github.io/ria-back-office/)
-          if [ "$HTTP_STATUS" = "200" ]; then
-            echo "✅ Site is live and responding"
-          else
-            echo "❌ Site is not accessible (Status: $HTTP_STATUS)"
-            exit 1
-          fi
-          
-          # Check for critical resources
-          if curl -s https://investgrape.github.io/ria-back-office/ | grep -q "<div id=\"root\""; then
-            echo "✅ React root element found"
-          else
-            echo "❌ React root element not found"
-            exit 1
-          fi
-
-      - name: Deployment Report
-        if: always()
-        run: |
-          echo "📊 Deployment Status Report"
-          echo "---------------------------"
-          echo "🌐 URL: https://investgrape.github.io/ria-back-office/"
-          echo "⏱️ Time: $(date)"
-          echo "📦 Version: ${{ github.sha }}"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "✅ Deployment Status: SUCCESS"
-          else
-            echo "❌ Deployment Status: FAILED"
-          fi
+          curl -I https://investgrape.github.io/ria-back-office/
