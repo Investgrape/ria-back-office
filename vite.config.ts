@@ -7,7 +7,12 @@ export default defineConfig({
   base: '/ria-back-office/',
   build: {
     outDir: 'docs',
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   },
   resolve: {
     alias: {
