@@ -1,43 +1,30 @@
 export interface Agreement {
   id: string;
   clientName: string;
-  type: AgreementType;
-  status: AgreementStatus;
-  dateCreated: string;
+  type: string;
+  status: 'pending_review' | 'approved' | 'rejected';
+  riskScore: 'low' | 'medium' | 'high';
+  created: string;
   lastModified: string;
   version: string;
-  content?: string;
-  signedDate?: string;
-  expirationDate?: string;
-  attachments?: Attachment[];
+  fee: string;
+  accountType: string;
+  assets: string;
+  complianceNotes: string[];
 }
 
-export type AgreementStatus = 'draft' | 'pending' | 'active' | 'expired' | 'terminated';
-
-export type AgreementType = 
-  | 'Investment Management Agreement'
-  | 'Financial Planning Agreement'
-  | 'Custodial Agreement'
-  | 'Limited Power of Attorney'
-  | 'Privacy Policy'
-  | 'Form ADV Receipt'
-  | 'Risk Disclosure';
-
-export interface Attachment {
+export interface ComplianceAlert {
   id: string;
-  name: string;
-  type: string;
-  url: string;
-  uploadedAt: string;
+  clientName: string;
+  issues: string[];
+  severity: 'warning' | 'error' | 'info';
 }
 
-export interface AgreementTemplate {
-  id: string;
-  name: string;
-  type: AgreementType;
-  content: string;
-  version: string;
-  lastUpdated: string;
-  variables: string[];
-  requiredFields: string[];
+export interface AgreementFormData {
+  clientName: string;
+  email: string;
+  accountType: string;
+  fee: string;
+  isRollover: boolean;
+  riskScore?: string;
 }
