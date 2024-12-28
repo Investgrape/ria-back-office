@@ -83,11 +83,11 @@ const Sidebar = () => {
                 <div className="space-y-1">
                   <button
                     onClick={() => item.subItems && toggleMenu(item.path)}
-                    className={`flex w-full items-center justify-between gap-x-3 rounded-lg px-3 py-2 text-sm font-medium ${
-                      isActive(item.path)
+                    className={'flex w-full items-center justify-between gap-x-3 rounded-lg px-3 py-2 text-sm font-medium ' +
+                      (isActive(item.path)
                         ? 'bg-blue-50 text-blue-600'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900')
+                    }
                   >
                     <div className="flex items-center gap-x-3">
                       <item.icon className="h-5 w-5 shrink-0" />
@@ -95,9 +95,9 @@ const Sidebar = () => {
                     </div>
                     {item.subItems && (
                       <ChevronRight
-                        className={`h-4 w-4 shrink-0 transition-transform ${
-                          isMenuOpen(item.path) ? 'rotate-90' : ''
-                        }`}
+                        className={'h-4 w-4 shrink-0 transition-transform ' +
+                          (isMenuOpen(item.path) ? 'rotate-90' : '')
+                        }
                       />
                     )}
                   </button>
@@ -108,11 +108,11 @@ const Sidebar = () => {
                         <li key={subItem.path}>
                           <Link
                             to={subItem.path}
-                            className={`block rounded-lg px-3 py-2 text-sm font-medium ${
-                              isActive(subItem.path)
+                            className={'block rounded-lg px-3 py-2 text-sm font-medium ' +
+                              (isActive(subItem.path)
                                 ? 'bg-blue-50 text-blue-600'
-                                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                            }`}
+                                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900')
+                            }
                           >
                             {subItem.name}
                           </Link>
