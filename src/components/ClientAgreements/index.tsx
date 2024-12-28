@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, Download } from 'lucide-react';
+import { Plus, Search, Filter, Download, PlayCircle, AlertCircle } from 'lucide-react';
 
 interface Agreement {
   id: string;
@@ -24,17 +24,73 @@ export default function ClientAgreements() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [isAuditing, setIsAuditing] = useState(false);
+
+  const handleRunAudit = () => {
+    setIsAuditing(true);
+    // Add audit logic here
+    setTimeout(() => setIsAuditing(false), 2000); // Simulated audit process
+  };
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Client Agreements</h1>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          <Plus size={20} />
-          New Agreement
-        </button>
+      {/* Top Section */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h1 className="text-2xl font-semibold mb-2">Client Agreements</h1>
+            <p className="text-gray-600">Manage and track all client agreements and their status</p>
+          </div>
+          <div className="flex gap-3">
+            <button 
+              onClick={handleRunAudit}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                isAuditing 
+                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+            >
+              {isAuditing ? (
+                <>
+                  <AlertCircle size={20} />
+                  Running Audit...
+                </>
+              ) : (
+                <>
+                  <PlayCircle size={20} />
+                  Run Audit
+                </>
+              )}
+            </button>
+            <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+              <Plus size={20} />
+              New Agreement
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-gray-500 text-sm font-medium">Total Agreements</h3>
+            <p className="text-2xl font-semibold mt-1">24</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-gray-500 text-sm font-medium">Active Agreements</h3>
+            <p className="text-2xl font-semibold mt-1 text-green-600">18</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-gray-500 text-sm font-medium">Pending Signatures</h3>
+            <p className="text-2xl font-semibold mt-1 text-yellow-600">4</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-gray-500 text-sm font-medium">Expiring Soon</h3>
+            <p className="text-2xl font-semibold mt-1 text-red-600">2</p>
+          </div>
+        </div>
       </div>
 
+      {/* Search and Filter Section */}
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -65,6 +121,7 @@ export default function ClientAgreements() {
         </button>
       </div>
 
+      {/* Table Section */}
       <div className="bg-white rounded-lg shadow">
         <table className="w-full">
           <thead className="bg-gray-50">
