@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Dialog } from '@radix-ui/react-dialog';
 import { Plus, Search, Filter, Download } from 'lucide-react';
 
 interface Agreement {
@@ -20,8 +19,7 @@ export default function ClientAgreements() {
       status: 'active',
       dateCreated: '2024-01-15',
       lastModified: '2024-01-15'
-    },
-    // Add more sample data as needed
+    }
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
