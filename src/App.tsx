@@ -7,7 +7,7 @@ import EmailSection from './components/EmailSection';
 import EmployeeSection from './components/EmployeeSection';
 import MarketingSection from './components/MarketingSection';
 import AuditSection from './components/AuditSection';
-import ClientAgreements from './components/ClientAgreements';
+import ClientAgreements from './components/agreements/ClientAgreements';
 
 const App: React.FC = () => {
   return (
