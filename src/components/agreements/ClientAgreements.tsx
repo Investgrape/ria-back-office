@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, Download } from 'lucide-react';
+import { Plus, Search, Filter, Download, PlayCircle, AlertCircle } from 'lucide-react';
 
 interface Agreement {
   id: string;
@@ -24,14 +24,37 @@ export default function ClientAgreements() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [isAuditing, setIsAuditing] = useState(false);
+
+  const handleRunAudit = () => {
+    setIsAuditing(true);
+    // Add audit logic here
+    setTimeout(() => setIsAuditing(false), 2000); // Simulated audit process
+  };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Client Agreements</h1>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          <Plus size={20} />
-          New Agreement
+        <button 
+          onClick={handleRunAudit}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+            isAuditing 
+              ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
+              : 'bg-blue-600 text-white hover:bg-blue-700'
+          }`}
+        >
+          {isAuditing ? (
+            <>
+              <AlertCircle size={20} />
+              Running Audit...
+            </>
+          ) : (
+            <>
+              <PlayCircle size={20} />
+              Run Audit
+            </>
+          )}
         </button>
       </div>
 
@@ -59,6 +82,10 @@ export default function ClientAgreements() {
             <option value="expired">Expired</option>
           </select>
         </div>
+        <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
+          <Plus size={20} />
+          New Agreement
+        </button>
         <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
           <Download size={20} />
           Export
