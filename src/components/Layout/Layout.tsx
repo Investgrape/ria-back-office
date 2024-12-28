@@ -1,6 +1,11 @@
-import { Menu } from 'lucide-react';
+import { Menu, Shield, ChevronRight } from 'lucide-react';
+import type { FC, ReactNode } from 'react';
 
-const Layout = ({ children }) => {
+type LayoutProps = {
+  children: ReactNode;
+};
+
+const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile header */}
@@ -18,11 +23,20 @@ const Layout = ({ children }) => {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 border-r border-gray-200 bg-white px-6">
-          <div className="flex h-16 shrink-0 items-center">
-            <span className="text-lg font-semibold">RIA Compliance</span>
+        <div className="flex grow flex-col gap-y-5 border-r border-gray-200 bg-white">
+          <div className="flex h-16 shrink-0 items-center px-6 border-b border-gray-200">
+            <div className="flex items-center gap-x-3">
+              <div className="rounded-lg bg-blue-600 p-2">
+                <Shield className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-lg font-semibold">RIA Compliance</span>
+            </div>
           </div>
-          {/* Sidebar content will go here */}
+          <nav className="flex-1 px-4 pb-4">
+            <ul className="space-y-1">
+              {/* Navigation items will go here */}
+            </ul>
+          </nav>
         </div>
       </div>
 
